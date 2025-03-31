@@ -12,6 +12,11 @@
     ],
     "routes": [
       {
+        "src": "^/$",
+        "dest": "/dashboard.html",
+        "status": 301
+      },
+      {
         "src": "/api/(.*)",
         "dest": "/api/index.js"
       },
