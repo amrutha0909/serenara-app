@@ -6,6 +6,6 @@ document.getElementById("feedback-form").addEventListener("submit", function (e)
     const message = document.getElementById("message").value;
 
     console.log("Feedback:", { name, email, rating, message });
-    alert("Thank you for your feedback, " + name + "! We’ll use your input to improve Serenity Space.");
+    alert("Thank you for your feedback, " + name + "! We’ll use your input to improve Serenara.");
     document.getElementById("feedback-form").reset();
 });
