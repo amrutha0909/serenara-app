@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Serenara</title>
+    <audio id="background-music" src="/calming_music.mp3"></audio>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="page-wrapper">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <img class="logo" src="https://i.pinimg.com/736x/15/8b/7b/158b7bbd9b661764feeff138eb65c83e.jpg">
+                <span class="brand-name">Serenara</span>
+            </div>
+            <div class="navbar-links">
+                <a href="dashboard.html">Home</a>
+                <a href="feedback.html">Feedback</a>
+                <a href="login.html" id="logout">Logout</a>
+            </div>
+        </nav>
+        <div class="dashboard-container">
+            <h1 id="welcome-message" class="animate__animated animate__fadeInDown">Welcome!</h1>
+            <div class="progress">
+                <p>Total Meditation Time: <span id="total-time">0</span> seconds</p>
+            </div>
+            <div class="meditation-controls">
+                <select id="meditation-type">
+                    <option value="breathing">Breathing</option>
+                    <option value="bodyscan">Body Scan</option>
+                    <option value="gratitude">Gratitude</option>
+                </select>
+                <label for="music-toggle">
+                    <input type="checkbox" id="music-toggle" checked> Play Background Music
+                </label>
+                <button id="start-btn">Start Meditation</button>
+                <button id="stop-btn" style="display: none;">Stop Session</button>
+            </div>
+            <div class="timer">
+                <p>Elapsed Time: <span id="elapsed-time">0</span> seconds</p>
+            </div>
+            <div id="instructions" class="instructions">Select a meditation type and click Start.</div>
+            <audio id="background-music" loop>
+                <source src="calming_music.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+
+            <!-- Chatbot Section -->
+            <div class="chatbot-container">
+                <h2>Chat with Serenara</h2>
+                <p>Ask me anything about meditation, yoga, or therapy!</p>
+                <div class="chatbot-messages" id="chatbot-messages">
+                    <div class="message bot-message">Hello! I'm here to help with meditation, yoga, and therapy questions. What’s on your mind?</div>
+                </div>
+                <div class="chatbot-input">
+                    <input type="text" id="chatbot-input" placeholder="Type your question...">
+                    <button id="chatbot-send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>Contact Us: <a href="mailto:support@serenara.com">support@serenara.com</a> | <a href="mailto:feedback@serenara.com">feedback@serenara.com</a></p>
+        <p>© 2025 Serenara. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+.pnpm-debug.log
+
+# Environment variables
+.env
+
+# Vercel build artifacts
+.vercel/
+.vercelignore
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# Build output (if you add a build step later)
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
