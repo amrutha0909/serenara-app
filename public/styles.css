@@ -223,6 +223,13 @@ h1 {
 .dashboard-container h1{
     font-weight: bold;
 }
+.meditation-controls select{
+    background: linear-gradient(45deg, #a163ed, #b183e9);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
+    padding-right: 10px;
+    color: #ffffff;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
 .meditation-controls select:focus {
     outline: none;
     background: rgba(103, 54, 207, 0.6);
