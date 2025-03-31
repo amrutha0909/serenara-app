@@ -22,7 +22,7 @@ const sessions = {};
 const systemInstruction = 'You are a compassionate therapist specializing in meditation, yoga, and mental health therapy. Provide helpful, concise, and empathetic answers to user questions about meditation techniques, yoga practices, stress management, mindfulness, and other therapy-related topics. Avoid giving medical advice and encourage users to consult professionals for serious concerns.';
 
 // Chatbot route
-app.post('/chatbot', async (req, res) => {
+app.post('/api/chatbot', async (req, res) => { // Updated to /api/chatbot
     const { message, sessionId } = req.body;
 
     try {
@@ -73,7 +73,7 @@ app.get('/', (req, res) => {
 });
 
 // Meditation endpoint
-app.get('/meditate', async (req, res) => {
+app.get('/api/meditate', async (req, res) => { // Updated to /api/meditate
     const meditationType = req.query.type?.toLowerCase();
 
     if (!["breathing", "bodyscan", "gratitude"].includes(meditationType)) {
