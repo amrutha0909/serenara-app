@@ -22,7 +22,7 @@ const sessions = {};
 const systemInstruction = 'You are a compassionate therapist specializing in meditation, yoga, and mental health therapy. Provide helpful, concise, and empathetic answers to user questions about meditation techniques, yoga practices, stress management, mindfulness, and other therapy-related topics. Avoid giving medical advice and encourage users to consult professionals for serious concerns.';
 
 // Chatbot route
-app.post('/api/chatbot', async (req, res) => { // Updated to /api/chatbot
+app.post('/api/chatbot', async (req, res) => {
     const { message, sessionId } = req.body;
 
     try {
@@ -73,7 +73,7 @@ app.get('/', (req, res) => {
 });
 
 // Meditation endpoint
-app.get('/api/meditate', async (req, res) => { // Updated to /api/meditate
+app.get('/api/meditate', async (req, res) => {
     const meditationType = req.query.type?.toLowerCase();
 
     if (!["breathing", "bodyscan", "gratitude"].includes(meditationType)) {
@@ -83,11 +83,14 @@ app.get('/api/meditate', async (req, res) => { // Updated to /api/meditate
     let instructions = "";
 
     try {
+        // Define the prompt
+        const prompt = `You are a mindfulness coach. Generate a 5-minute ${meditationType} meditation script. Use short, calming sentences. Focus on a soothing tone. Example: "Close your eyes. Take a deep breath in. Hold for 4 seconds. Exhale slowly."`;
+
         // Call Hugging Face Inference API with DistilGPT2
         const response = await axios.post(
             'https://api-inference.huggingface.co/models/distilgpt2',
             {
-                inputs: `You are a mindfulness coach. Generate a 5-minute ${meditationType} meditation script. Use short, calming sentences. Focus on a soothing tone. Example: "Close your eyes. Take a deep breath in. Hold for 4 seconds. Exhale slowly."`,
+                inputs: prompt,
                 parameters: {
                     max_length: 200, // Slightly longer for a 5-minute script
                     temperature: 0.6, // Lower temperature for more focused, calming output
@@ -107,10 +110,9 @@ app.get('/api/meditate', async (req, res) => { // Updated to /api/meditate
         // Extract the generated text
         instructions = response.data[0].generated_text.trim();
 
-        // Clean up the output (remove the prompt if included)
-        const promptEnd = "Example: \"Close your eyes. Take a deep breath in. Hold for 4 seconds. Exhale slowly.\"";
-        if (instructions.includes(promptEnd)) {
-            instructions = instructions.split(promptEnd)[1]?.trim() || instructions;
+        // Clean up the output by removing the prompt
+        if (instructions.startsWith(prompt)) {
+            instructions = instructions.substring(prompt.length).trim();
         }
 
         // Ensure the script ends cleanly
@@ -118,8 +120,8 @@ app.get('/api/meditate', async (req, res) => { // Updated to /api/meditate
             instructions += '.';
         }
     } catch (error) {
-        console.error("Hugging Face API error:", error.response?.data || error.message);
-        instructions = fallbackScripts[meditationType]; // Fallback on error
+        console.error(`Hugging Face API error for ${meditationType}:`, error.response?.data || error.message);
+        instructions = fallbackScripts[meditationType] || "Take a deep breath in for 4 seconds, hold for 4, exhale for 4. Repeat and relax."; // Fallback with default if meditationType not found
     }
 
     res.json({ instructions });
