@@ -21,6 +21,14 @@
         "dest": "/api/index.js"
       },
       {
+        "src": "/meditate",
+        "dest": "/api/index.js"
+      },
+      {
+        "src": "/chatbot",
+        "dest": "/api/index.js"
+      },
+      {
         "src": "/(.*)",
         "dest": "/public/$1"
       }
