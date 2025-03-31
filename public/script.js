@@ -65,7 +65,10 @@ async function startMeditation() {
 
     let instructions;
     try {
-        const response = await fetch(`/meditate?type=${type}`); // Use relative path
+        const response = await fetch(`/api/meditate?type=${type}`); // Updated to use /api/ prefix
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         instructions = data.instructions;
     } catch (error) {
@@ -157,11 +160,14 @@ chatbotSend.addEventListener("click", async () => {
 
     // Send message to backend
     try {
-        const response = await fetch("/chatbot", { // Use relative path
+        const response = await fetch("/api/chatbot", { // Updated to use /api/ prefix
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message, sessionId })
         });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         addMessage(data.reply, "bot-message");
     } catch (error) {
