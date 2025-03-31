@@ -115,13 +115,21 @@ app.get('/api/meditate', async (req, res) => {
             instructions = instructions.substring(prompt.length).trim();
         }
 
-        // Ensure the script ends cleanly
+        // Ensure the script is not empty and ends cleanly
+        if (!instructions || instructions.length < 10) { // If empty or too short
+            throw new Error("Generated script is too short or empty");
+        }
+
         if (!instructions.endsWith('.')) {
             instructions += '.';
         }
     } catch (error) {
         console.error(`Hugging Face API error for ${meditationType}:`, error.response?.data || error.message);
-        instructions = fallbackScripts[meditationType] || "Take a deep breath in for 4 seconds, hold for 4, exhale for 4. Repeat and relax."; // Fallback with default if meditationType not found
+        instructions = fallbackScripts[meditationType] || "Take a deep breath in for 4 seconds, hold for 4, exhale for 4. Repeat and relax.";
+        // Ensure the fallback script ends with a period
+        if (!instructions.endsWith('.')) {
+            instructions += '.';
+        }
     }
 
     res.json({ instructions });
