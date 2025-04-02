@@ -18,8 +18,8 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 // Store user sessions for chatbot (in-memory for simplicity; use a database in production)
 const sessions = {};
 
-// System instruction to prepend to the user's first message
-const systemInstruction = 'You are a compassionate therapist specializing in meditation, yoga, and mental health therapy. Provide helpful, concise, and empathetic answers to user questions about meditation techniques, yoga practices, stress management, mindfulness, and other therapy-related topics. Avoid giving medical advice and encourage users to consult professionals for serious concerns.';
+// System instruction to enforce bullet-point answers
+const systemInstruction = 'You are a mindfulness expert specializing in meditation, yoga, and mental health. Answer user questions with concise, direct bullet points. Use short sentences. Do not include introductions, conclusions, or unnecessary text. Focus only on the core steps or advice. Avoid medical advice and recommend consulting professionals for serious concerns. Format every response as bullet points starting with "- ".';
 
 // Chatbot route
 app.post('/api/chatbot', async (req, res) => {
@@ -32,8 +32,8 @@ app.post('/api/chatbot', async (req, res) => {
             sessions[sessionId] = model.startChat({
                 history: [],
                 generationConfig: {
-                    maxOutputTokens: 150, // Limit response length for concise answers
-                    temperature: 0.7, // Moderate creativity for thoughtful responses
+                    maxOutputTokens: 100, // Reduced for even shorter responses
+                    temperature: 0.3, // Lower temperature for more focused, less creative responses
                 }
             });
 
@@ -42,7 +42,10 @@ app.post('/api/chatbot', async (req, res) => {
             const chat = sessions[sessionId];
             const result = await chat.sendMessage(initialMessage);
             const response = await result.response;
-            const text = response.text();
+            let text = response.text();
+
+            // Post-process the response to ensure bullet-point format
+            text = formatAsBulletPoints(text);
 
             res.json({ reply: text });
         } else {
@@ -50,15 +53,35 @@ app.post('/api/chatbot', async (req, res) => {
             const chat = sessions[sessionId];
             const result = await chat.sendMessage(message);
             const response = await result.response;
-            const text = response.text();
+            let text = response.text();
+
+            // Post-process the response to ensure bullet-point format
+            text = formatAsBulletPoints(text);
 
             res.json({ reply: text });
         }
     } catch (error) {
         console.error('Error with Gemini API:', error);
-        res.status(500).json({ reply: 'Sorry, I encountered an error. Please try again later.' });
+        res.status(500).json({ reply: '- Unable to process your request.\n- Please try again later.' });
     }
 });
+
+// Helper function to ensure bullet-point format
+function formatAsBulletPoints(text) {
+    // Split the text into lines and trim whitespace
+    const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+
+    // Ensure each line starts with a bullet point
+    const bulletPoints = lines.map(line => {
+        if (line.startsWith('- ')) {
+            return line;
+        }
+        return `- ${line}`;
+    });
+
+    // Join the lines back together
+    return bulletPoints.join('\n');
+}
 
 // Mock meditation scripts (for fallback)
 const fallbackScripts = {
