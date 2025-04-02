@@ -673,6 +673,7 @@ h1 {
 }
 /* Chatbot message styling */
 .message ul {
+    
     margin: 0;
     padding-left: 20px;
     list-style-type: disc; /* Use disc bullets */
@@ -681,7 +682,7 @@ h1 {
 .message li {
     margin-bottom: 5px;
     font-size: 16px;
-    color: #333;
+    color: rgb(93, 20, 146);
 }
 .user-message {
     background: rgba(255, 221, 225, 0.5); /* Semi-transparent pastel pink */
