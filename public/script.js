@@ -65,7 +65,7 @@ async function startMeditation() {
 
     let instructions;
     try {
-        const response = await fetch(`/api/meditate?type=${type}`); // Updated to use /api/ prefix
+        const response = await fetch(`/api/meditate?type=${type}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -145,7 +145,22 @@ const sessionId = Date.now().toString(); // Unique session ID for each page load
 function addMessage(content, className) {
     const messageDiv = document.createElement("div");
     messageDiv.className = `message ${className}`;
-    messageDiv.textContent = content;
+
+    if (className === "bot-message") {
+        // For bot messages, render as an unordered list
+        const ul = document.createElement("ul");
+        const lines = content.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+            const li = document.createElement("li");
+            li.textContent = line.replace('- ', ''); // Remove the "- " prefix for display
+            ul.appendChild(li);
+        });
+        messageDiv.appendChild(ul);
+    } else {
+        // For user messages, keep as plain text
+        messageDiv.textContent = content;
+    }
+
     chatbotMessages.appendChild(messageDiv);
     chatbotMessages.scrollTop = chatbotMessages.scrollHeight; // Auto-scroll to bottom
 }
@@ -160,7 +175,7 @@ chatbotSend.addEventListener("click", async () => {
 
     // Send message to backend
     try {
-        const response = await fetch("/api/chatbot", { // Updated to use /api/ prefix
+        const response = await fetch("/api/chatbot", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message, sessionId })
